@@ -11,7 +11,7 @@ class TwilioService:
 
         sid = os.getenv("TWILIO_ACCOUNT_SID")
         token = os.getenv("TWILIO_AUTH_TOKEN")
-        from_phone = os.getenv("TWILIO_PHONE")
+        from_phone = os.getenv("TWILIO_PHONE_NUMBER")
 
         client = Client(sid, token)
 

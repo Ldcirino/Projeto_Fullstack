@@ -2,6 +2,10 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 from src.config.data_base import init_db
 from src.routes import init_routes
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 def create_app():
     """
