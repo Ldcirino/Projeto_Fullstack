@@ -1,5 +1,4 @@
-import jwt
-import datetime
+from flask_jwt_extended import create_access_token
 from src.Infrastructure.Model.user import User
 
 class AuthService:
@@ -18,9 +17,6 @@ class AuthService:
         if user.status != "ATIVO":
             return "INATIVO"
 
-        token = jwt.encode({
-            "user_id": user.id,
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(hours=24)
-        }, "secret", algorithm="HS256")
+        token = create_access_token(identity=str(user.id))
 
         return token

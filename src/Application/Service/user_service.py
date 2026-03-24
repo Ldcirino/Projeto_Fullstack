@@ -24,9 +24,10 @@ class UserService:
         db.session.add(user)
         db.session.commit()
 
-        #TwilioService.send_whatsapp(phone, activation_code)
+        # ENVIA WHATSAPP
+        TwilioService.send_whatsapp(phone, activation_code)
 
-        return UserDomain(user.id, user.name, user.email ,user.cnpj ,user.phone)
+        return UserDomain(user.id, user.name, user.email, user.cnpj, user.phone)
 
     @staticmethod
     def verify_code(email, code):
@@ -36,7 +37,7 @@ class UserService:
         if not user:
             return None
 
-        if user.activation_code != code:
+        if str(user.activation_code).strip() != str(code).strip():
             return False
 
         user.status = "ATIVO"
