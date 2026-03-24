@@ -1,0 +1,52 @@
+python -m venv venv
+
+venv\Scripts\activate
+
+pip install -r requirements.txt
+------------------------------------------------------------
+criar .env
+
+TWILIO_ACCOUNT_SID=SEU_SID
+TWILIO_AUTH_TOKEN=SEU_TOKEN
+TWILIO_PHONE_NUMBER=whatsapp:+14155238886
+
+------------------------------------------------------------
+iniciar
+
+py run.py
+
+logar no sandbox do twilio "join harbor-fill"
+
+
+rotas
+http://127.0.0.1:5000
+/cadastro
+/validar_code
+/login
+/profile
+
+cadastro / post
+
+{
+  "name": "",
+  "cnpj": "",
+  "email": "",
+  "phone": "",
+  "password": ""
+}
+
+code / post
+{
+  "email": "",
+  "code": ""
+}
+
+login / post
+{
+  "email": "",
+  "password": ""
+}
+
+autentic / get
+
+adicionar o token
