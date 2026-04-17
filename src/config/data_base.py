@@ -1,6 +1,6 @@
 import os
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import inspect
+from sqlalchemy import inspect, text
 
 db = SQLAlchemy()
 
@@ -31,14 +31,25 @@ def init_db(app):
     with app.app_context():
         db.create_all()
 
-        # Se a tabela 'users' estiver com schema antigo (sem novas colunas),
-        # recria automaticamente (apenas para desenvolvimento).
+        # Se a tabela 'users' estiver com schema antigo (sem novas colunas) ou
+        # ainda com UNIQUE no campo celular, recria automaticamente (apenas para desenvolvimento).
         try:
             inspector = inspect(db.engine)
             if "users" in inspector.get_table_names():
                 cols = {c["name"] for c in inspector.get_columns("users")}
                 required = {"id", "name", "cnpj", "email", "celular", "password", "status", "activation_code"}
-                if not required.issubset(cols):
+
+                recreate = not required.issubset(cols)
+
+                # Verifica se a tabela foi criada com UNIQUE em celular de forma direta.
+                with db.engine.connect() as conn:
+                    result = conn.execute(
+                        text("SELECT sql FROM sqlite_master WHERE type='table' AND name='users'")
+                    ).scalar()
+                if result and ("UNIQUE (celular)" in result or "UNIQUE(celular)" in result):
+                    recreate = True
+
+                if recreate:
                     db.drop_all()
                     db.create_all()
         except Exception:

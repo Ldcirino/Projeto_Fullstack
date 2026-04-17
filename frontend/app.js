@@ -115,10 +115,11 @@ function RegisterForm({ apiBase, onGoActivate }) {
 
   return (
     <div className="card">
-      <h2 className="title">Cadastro do mini mercado</h2>
-      <p className="sub">
-        Crie sua conta. Após o cadastro, você receberá um código de 4 dígitos no WhatsApp para ativar sua conta.
-      </p>
+      <div className="form-top">
+        <p className="eyebrow">Passo 1 de 3: Dados Principais</p>
+        <h2 className="title">Iniciar Jornada • TechStock</h2>
+        <p className="sub">Crie sua conta para gestão de alto nível de mini mercados</p>
+      </div>
       <form onSubmit={onSubmit}>
         <label>
           Nome do mini mercado
@@ -134,7 +135,7 @@ function RegisterForm({ apiBase, onGoActivate }) {
             <input
               value={celular}
               onChange={(e) => setCelular(e.target.value)}
-              placeholder="+559999999999"
+              placeholder="+5511999999999"
             />
           </label>
         </div>
@@ -154,6 +155,10 @@ function RegisterForm({ apiBase, onGoActivate }) {
         <button className="btn" disabled={loading}>
           {loading ? "Cadastrando..." : "Cadastrar"}
         </button>
+        <div className="helper-row">
+          <span className="helper-pill">Validação de CNPJ</span>
+          <span className="helper-pill">Termos de Uso</span>
+        </div>
         <MessageBox kind="ok" title="Sucesso">
           {ok}
         </MessageBox>
@@ -198,19 +203,27 @@ function ActivateForm({ apiBase, initialPhone }) {
 
   return (
     <div className="card">
-      <h2 className="title">Ativar conta</h2>
-      <p className="sub">
-        Informe o WhatsApp e o código de 4 dígitos recebido para ativar sua conta.
-      </p>
+      <div className="form-top">
+        <h2 className="title">Ativação de Conta</h2>
+        <p className="sub">Confirme seu WhatsApp e o código de 4 dígitos para acesso total</p>
+      </div>
+      <div className="code-input">
+        {[1, 2, 3, 4].map((item) => (
+          <div key={item} className="step-circle">
+            {item}
+          </div>
+        ))}
+      </div>
       <form onSubmit={onSubmit}>
         <label>
           WhatsApp (com DDI)
-          <input value={celular} onChange={(e) => setCelular(e.target.value)} placeholder="+559999999999" />
+          <input value={celular} onChange={(e) => setCelular(e.target.value)} placeholder="+5511977603310" />
         </label>
         <label>
           Código
           <input value={codigo} onChange={(e) => setCodigo(e.target.value)} placeholder="1234" />
         </label>
+        {loading ? <div className="verifying">Verificando...</div> : null}
         <button className="btn" disabled={loading}>
           {loading ? "Ativando..." : "Ativar"}
         </button>
@@ -257,8 +270,12 @@ function LoginForm({ apiBase, onLoggedIn }) {
 
   return (
     <div className="card">
-      <h2 className="title">Login</h2>
-      <p className="sub">Para entrar, sua conta precisa estar ativada.</p>
+      <div className="form-top">
+        <h2 className="title">Acesso Restrito</h2>
+        <p className="sub">
+          Segurança: <span className="highlight">Criptografia Ativa</span>
+        </p>
+      </div>
       <form onSubmit={onSubmit}>
         <label>
           E-mail
@@ -282,60 +299,56 @@ function LoginForm({ apiBase, onLoggedIn }) {
   );
 }
 
-function SessionCard({ apiBase }) {
-  const [token, setToken] = useState(localStorage.getItem(LS_TOKEN_KEY) || "");
-  const [user, setUser] = useState(() => {
-    try {
-      const raw = localStorage.getItem(LS_USER_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch {
-      return null;
-    }
-  });
+function SidePanel({ screen }) {
+  if (screen === "register") {
+    return (
+      <div className="panel">
+        <div className="panel-card note">
+          <h3>Login via CPF</h3>
+          <p>Use seu CPF para entrar mais rápido ou tente acessar com e-mail caso prefira.</p>
+        </div>
+        <div className="panel-card">
+          <button type="button" className="panel-button">
+            <span>Login via CPF</span>
+          </button>
+          <button type="button" className="panel-button">
+            <span>Tentar por E-mail</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
 
-  useEffect(() => {
-    function onStorage() {
-      setToken(localStorage.getItem(LS_TOKEN_KEY) || "");
-      try {
-        const raw = localStorage.getItem(LS_USER_KEY);
-        setUser(raw ? JSON.parse(raw) : null);
-      } catch {
-        setUser(null);
-      }
-    }
-    window.addEventListener("storage", onStorage);
-    return () => window.removeEventListener("storage", onStorage);
-  }, []);
-
-  function clear() {
-    localStorage.removeItem(LS_TOKEN_KEY);
-    localStorage.removeItem(LS_USER_KEY);
-    setToken("");
-    setUser(null);
+  if (screen === "activate") {
+    return (
+      <div className="panel">
+        <div className="panel-card note">
+          <h3>Reenviar código</h3>
+          <p>Precisa de um novo código? Reenvie pelo WhatsApp ou tente recuperar por e-mail.</p>
+        </div>
+        <div className="panel-card">
+          <button type="button" className="panel-button">
+            <span>Reenviar código por WhatsApp</span>
+          </button>
+          <button type="button" className="panel-button">
+            <span>Tentar por E-mail</span>
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="card">
-      <h2 className="title">Conexão com a API</h2>
-      <p className="sub">
-        A API base atual é <code className="kbd">{apiBase}</code>. Você pode trocar usando{" "}
-        <code className="kbd">?apiBase=http://localhost:5000</code>.
-      </p>
-      <div className="small" style={{ marginBottom: 10 }}>
-        Token salvo no navegador (após login):
+    <div className="panel">
+      <div className="panel-card note">
+        <h3>Esqueceu a senha?</h3>
+        <p>Se não lembrar, utilize a opção de biometria para entrar com segurança.</p>
       </div>
-      <div className="msg" style={{ marginBottom: 10 }}>
-        <div className="tokenBox">{token || "(sem token)"}</div>
+      <div className="panel-card">
+        <button type="button" className="panel-button">
+          <span>Logar com Biometria</span>
+        </button>
       </div>
-      <div className="small" style={{ marginBottom: 10 }}>
-        Usuário:
-      </div>
-      <div className="msg" style={{ marginBottom: 10 }}>
-        <div className="tokenBox">{user ? JSON.stringify(user, null, 2) : "(sem usuário)"}</div>
-      </div>
-      <button className="btn secondary" onClick={clear} disabled={!token && !user}>
-        Limpar sessão local
-      </button>
     </div>
   );
 }
@@ -347,17 +360,17 @@ function App() {
 
   return (
     <div className="wrap">
-      <header>
-        <h1>Gestão de Estoque • Mini Mercado</h1>
+      <div className="page-head">
+        <div className="brand">Gestão de Estoque • Mini Mercado</div>
         <SectionNav
           current={screen}
           onChange={(s) => {
             setScreen(s);
           }}
         />
-      </header>
+      </div>
 
-      <div className="grid">
+      <div className="content-grid">
         <div>
           {screen === "register" ? (
             <RegisterForm apiBase={apiBase} onGoActivate={(phone) => { setLastPhone(phone); setScreen("activate"); }} />
@@ -365,9 +378,7 @@ function App() {
           {screen === "activate" ? <ActivateForm apiBase={apiBase} initialPhone={lastPhone} /> : null}
           {screen === "login" ? <LoginForm apiBase={apiBase} onLoggedIn={() => {}} /> : null}
         </div>
-        <div>
-          <SessionCard apiBase={apiBase} />
-        </div>
+        <SidePanel screen={screen} />
       </div>
     </div>
   );

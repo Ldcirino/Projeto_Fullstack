@@ -1,70 +1,12 @@
 from flask import request, jsonify, make_response
 from src.Application.Service.user_service import UserService
-<<<<<<< HEAD
-from src.Application.Service.login_service import AuthService
-=======
 from src.config.auth import generate_token
->>>>>>> 25bfe06 (Criação Front-end pagina de cadastro,autenticação e login)
 
 class UserController:
 
     @staticmethod
     def register_user():
         data = request.get_json()
-<<<<<<< HEAD
-
-        user = UserService.create_user(
-            data.get("name"),
-            data.get("cnpj"),
-            data.get("email"),
-            data.get("phone"),
-            data.get("password")
-        )
-
-        return jsonify({
-            "message": "Usuário criado com sucesso",
-            "user": user.to_dict()
-        }), 201
-
-    @staticmethod
-    def login_user():
-
-        data = request.get_json()
-
-        token = AuthService.login(
-            data.get("email"),
-            data.get("password")
-        )
-
-        if token is None:
-            return make_response(jsonify({"erro": "Credenciais inválidas"}), 401)
-
-        if token == "INATIVO":
-            return make_response(jsonify({"erro": "Usuário não ativado"}), 403)
-
-        return jsonify({
-            "token": token
-        })
-
-    @staticmethod
-    def verify_user():
-
-        data = request.get_json()
-
-        result = UserService.verify_code(
-            data.get("email"),
-            data.get("code")
-        )
-
-        if result is None:
-            return make_response(jsonify({"erro": "Usuário não encontrado"}), 404)
-
-        if result is False:
-            return make_response(jsonify({"erro": "Código inválido"}), 400)
-
-        return make_response(jsonify({
-            "mensagem": "Conta ativada com sucesso"
-=======
         name = data.get('name')
         cnpj = data.get('cnpj')
         email = data.get('email')
@@ -119,5 +61,4 @@ class UserController:
             "mensagem": "Login realizado com sucesso!",
             "token": token,
             "usuario": user.to_dict()
->>>>>>> 25bfe06 (Criação Front-end pagina de cadastro,autenticação e login)
         }), 200)
