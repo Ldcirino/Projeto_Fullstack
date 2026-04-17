@@ -10,7 +10,12 @@ def create_app():
     """
     Função que cria e configura a aplicação Flask.
     """
-    app = Flask(__name__)
+    app = Flask(
+        __name__,
+        static_folder="frontend",
+        static_url_path="",
+        template_folder="frontend",
+    )
     CORS(app, resources={r"/api/*": {"origins": "*"}})
     app.secret_key = os.getenv("SECRET_KEY", "dev-secret-key-change-me")
 

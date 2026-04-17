@@ -7,23 +7,20 @@ from src.Infrastructure.Model.user import User
 
 def init_routes(app):
 
-    # Health check
-    @app.route('/', methods=['GET'])
-    def root():
-        return make_response(
-            jsonify(
-                {
-                    "mensagem": "API rodando. Use /api para health check.",
-                    "rotas": {
-                        "health": "/api",
-                        "cadastro_mini_mercado": "/api/sellers",
-                        "ativacao_conta": "/api/sellers/activate",
-                        "auth_login": "/api/auth/login",
-                    },
-                }
-            ),
-            200,
-        )
+    # Serve frontend single-page app and static assets
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def root(path):
+        if path and path.startswith('api'):
+            return make_response(
+                jsonify({"mensagem": "Rota de API inválida."}),
+                404,
+            )
+
+        if path and app.static_folder and os.path.exists(os.path.join(app.static_folder, path)):
+            return app.send_static_file(path)
+
+        return app.send_static_file('index.html')
 
     @app.route('/api', methods=['GET'])
     def health():

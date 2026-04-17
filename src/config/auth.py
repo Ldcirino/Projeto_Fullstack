@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 
 
@@ -14,7 +15,7 @@ def generate_token(user_id: int) -> str:
     return _serializer().dumps({"user_id": int(user_id)})
 
 
-def decode_token(token: str, max_age_seconds: int = 60 * 60 * 24 * 7) -> int | None:
+def decode_token(token: str, max_age_seconds: int = 60 * 60 * 24 * 7) -> Optional[int]:
     """
     Retorna user_id se o token for válido; caso contrário None.
     """

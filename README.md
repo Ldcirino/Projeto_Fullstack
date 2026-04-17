@@ -68,13 +68,13 @@ Um mini mercado autenticado pode:
 ### 1️⃣ Cadastro e Ativação de Conta
 - **Criar conta (mini mercado)**
   ```bash
-  curl -X POST "http://localhost:8080/api/sellers" \
+  curl -X POST "http://localhost:5000/api/sellers" \
        -H "Content-Type: application/json" \
        -d '{"nome": "Mini Mercado X", "cnpj": "00.000.000/0001-00", "email": "mercado@email.com", "celular": "+559999999999", "senha": "123456"}'
   ```
 - **Ativar conta via WhatsApp (Twilio)**
   ```bash
-  curl -X POST "http://localhost:8080/api/sellers/activate" \
+  curl -X POST "http://localhost:5000/api/sellers/activate" \
        -H "Content-Type: application/json" \
        -d '{"celular": "+559999999999", "codigo": "1234"}'
   ```
@@ -82,7 +82,7 @@ Um mini mercado autenticado pode:
 ### 2️⃣ Autenticação
 - **Login**
   ```bash
-  curl -X POST "http://localhost:8080/api/auth/login" \
+  curl -X POST "http://localhost:5000/api/auth/login" \
        -H "Content-Type: application/json" \
        -d '{"email": "mercado@email.com", "senha": "123456"}'
   ```
@@ -90,38 +90,38 @@ Um mini mercado autenticado pode:
 ### 3️⃣ Gerenciamento de Produtos
 - **Cadastrar Produto**
   ```bash
-  curl -X POST "http://localhost:8080/api/products" \
+  curl -X POST "http://localhost:5000/api/products" \
        -H "Authorization: Bearer SEU_TOKEN" \
        -H "Content-Type: application/json" \
        -d '{"nome": "Arroz", "preco": 10.50, "quantidade": 100, "status": "Ativo", "img": "url_da_imagem"}'
   ```
 - **Listar Produtos**
   ```bash
-  curl -X GET "http://localhost:8080/api/products" \
+  curl -X GET "http://localhost:5000/api/products" \
        -H "Authorization: Bearer SEU_TOKEN"
   ```
 - **Editar Produto**
   ```bash
-  curl -X PUT "http://localhost:8080/api/products/1" \
+  curl -X PUT "http://localhost:5000/api/products/1" \
        -H "Authorization: Bearer SEU_TOKEN" \
        -H "Content-Type: application/json" \
        -d '{"nome": "Arroz Integral", "preco": 12.00, "quantidade": 50, "status": "Ativo"}'
   ```
 - **Ver Detalhes de um Produto**
   ```bash
-  curl -X GET "http://localhost:8080/api/products/1" \
+  curl -X GET "http://localhost:5000/api/products/1" \
        -H "Authorization: Bearer SEU_TOKEN"
   ```
 - **Inativar Produto**
   ```bash
-  curl -X PATCH "http://localhost:8080/api/products/1/inactivate" \
+  curl -X PATCH "http://localhost:5000/api/products/1/inactivate" \
        -H "Authorization: Bearer SEU_TOKEN"
   ```
 
 ### 4️⃣ Realizar Venda
 - **Criar Venda**
   ```bash
-  curl -X POST "http://localhost:8080/api/sales" \
+  curl -X POST "http://localhost:5000/api/sales" \
        -H "Authorization: Bearer SEU_TOKEN" \
        -H "Content-Type: application/json" \
        -d '{"produtoId": 1, "quantidade": 2}'
@@ -130,15 +130,15 @@ Um mini mercado autenticado pode:
 ---
 
 ## 🛠️ Tecnologias Utilizadas
-- **Back-end:** Kotlin + Spring Boot
-- **Front-end:** React.js
-- **Banco de Dados:** MySQL ou PostgreSQL
-- **Autenticação:** JWT ou OAuth
+- **Back-end:** Python + Flask
+- **Front-end:** React.js via CDN
+- **Banco de Dados:** SQLite
+- **Autenticação:** Token com Flask e itsdangerous
 - **Mensageria:** Twilio (para envio do código de ativação no WhatsApp)
 
 ---
 
-## 🖥️ Front-end (React) – telas de acesso
+## 🖥️ Front-end (React) – telas de acesso e gestão
 
 Este repositório inclui um front end React (sem build, via CDN) em `frontend/` com as telas:
 
@@ -179,8 +179,8 @@ O back end atualmente espera os seguintes campos:
 - **Login** (`POST /api/auth/login`): `email`, `senha`
 
 ## 📊 Dashboard e Relatórios
-- Implementação de um painel para exibição de relatórios e análise de vendas.
-- Monitoramento de estoque em tempo real.
+- Painel de métricas de vendas, estoque e produtos.
+- Monitoramento básico de estoque e faturamento.
 
 ---
 

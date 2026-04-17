@@ -29,6 +29,9 @@ def init_db(app):
     
     # Cria as tabelas automaticamente
     with app.app_context():
+        # Importar todos os modelos antes de criar as tabelas
+        from src.Infrastructure.Model import user, product, sale  # noqa: F401
+
         db.create_all()
 
         # Se a tabela 'users' estiver com schema antigo (sem novas colunas) ou

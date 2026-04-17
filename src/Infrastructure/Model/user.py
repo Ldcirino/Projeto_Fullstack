@@ -12,6 +12,9 @@ class User(db.Model):
     status = db.Column(db.String(20), default="INATIVO")
     activation_code = db.Column(db.String(4), nullable=True)
 
+    products = db.relationship("Product", backref="seller", lazy=True)
+    sales = db.relationship("Sale", backref="seller", lazy=True)
+
     def to_dict(self):
         return {
             "id": self.id,
