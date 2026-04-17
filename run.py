@@ -1,21 +1,18 @@
 from flask import Flask
-from flask_jwt_extended import JWTManager
+from flask_cors import CORS
+import os
 from src.config.data_base import init_db
 from src.routes import init_routes
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
+from dotenv import load_dotenv 
+load_dotenv(override=True)
 
 def create_app():
     """
     Função que cria e configura a aplicação Flask.
     """
     app = Flask(__name__)
-
-    app.config["JWT_SECRET_KEY"] = "super-secret-key"
-
-    JWTManager(app)
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    app.secret_key = os.getenv("SECRET_KEY", "dev-secret-key-change-me")
 
     init_db(app)
 

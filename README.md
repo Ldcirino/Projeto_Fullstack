@@ -7,7 +7,7 @@ Desenvolver um sistema para gestão de estoque e vendas de mini mercados, garant
 
 ## 🚀 Funcionalidades Principais
 
-### 1️⃣ Cadastro de Mini Mercado (Seller)
+### 1️⃣ Cadastro de Mini Mercado (Conta)
 Os mini mercados devem se cadastrar informando os seguintes campos:
 - **Nome**
 - **CNPJ**
@@ -16,21 +16,21 @@ Os mini mercados devem se cadastrar informando os seguintes campos:
 - **Senha**
 - **Status** (Padrão: Inativo)
 
-#### 🔹 Fluxo de Ativação do Seller:
-1. Após o cadastro, um código de 4 dígitos é enviado via **WhatsApp (Twilio)** para o seller.
-2. O seller deve inserir o código recebido para ativar sua conta.
-3. Somente sellers ativados podem fazer login e gerenciar produtos.
+ 🔹 Fluxo de ativação da conta:
+1. Após o cadastro, um código de 4 dígitos é enviado via **WhatsApp (Twilio)** para o mini mercado.
+2. O mini mercado deve inserir o código recebido para ativar sua conta.
+3. Somente contas ativadas podem fazer login e gerenciar produtos.
 
 ---
 
-### 2️⃣ Autenticação do Seller
+### 2️⃣ Autenticação
 - O sistema deve utilizar **JWT** ou **OAuth** para autenticação.
-- Sellers inativados não podem fazer login.
+- Contas inativas não podem fazer login.
 
 ---
 
 ### 3️⃣ Gerenciamento de Produtos
-Um seller autenticado pode:
+Um mini mercado autenticado pode:
 - **Cadastrar produtos** com os seguintes campos:
   - Nome
   - Preço
@@ -43,12 +43,12 @@ Um seller autenticado pode:
 - **Inativar produtos**
 
 **Regras:**
-- O seller só pode visualizar e gerenciar seus próprios produtos.
+- O mini mercado só pode visualizar e gerenciar seus próprios produtos.
 
 ---
 
 ### 4️⃣ Venda de Produtos
-- O seller pode realizar uma venda informando:
+- O mini mercado pode realizar uma venda informando:
   - Produto
   - Quantidade
 - As vendas devem ser armazenadas na tabela `Vendas`, contendo:
@@ -59,20 +59,20 @@ Um seller autenticado pode:
 **Regras:**
 - Não é possível vender mais do que a quantidade disponível em estoque.
 - Produtos inativados não podem ser vendidos.
-- Sellers inativos não podem realizar vendas.
+- Contas inativas não podem realizar vendas.
 
 ---
 
 ## 📡 Endpoints da API
 
-### 1️⃣ Cadastro e Ativação do Seller
-- **Criar Seller**
+### 1️⃣ Cadastro e Ativação de Conta
+- **Criar conta (mini mercado)**
   ```bash
   curl -X POST "http://localhost:8080/api/sellers" \
        -H "Content-Type: application/json" \
        -d '{"nome": "Mini Mercado X", "cnpj": "00.000.000/0001-00", "email": "mercado@email.com", "celular": "+559999999999", "senha": "123456"}'
   ```
-- **Ativar Seller via WhatsApp (Twilio)**
+- **Ativar conta via WhatsApp (Twilio)**
   ```bash
   curl -X POST "http://localhost:8080/api/sellers/activate" \
        -H "Content-Type: application/json" \
@@ -137,6 +137,46 @@ Um seller autenticado pode:
 - **Mensageria:** Twilio (para envio do código de ativação no WhatsApp)
 
 ---
+
+## 🖥️ Front-end (React) – telas de acesso
+
+Este repositório inclui um front end React (sem build, via CDN) em `frontend/` com as telas:
+
+- Cadastro do mini mercado
+- Ativação da conta
+- Login
+
+### Como rodar
+
+1) Suba o back end (porta padrão **5000**):
+
+```bash
+pip install -r requirements.txt
+python run.py
+```
+
+2) Sirva o front end em outro terminal:
+
+```bash
+cd frontend
+python -m http.server 5173
+```
+
+3) Acesse no navegador:
+
+- `http://localhost:5173`
+
+Se seu back end estiver em outra porta/host, passe `apiBase` na URL, por exemplo:
+
+- `http://localhost:5173/?apiBase=http://localhost:5000`
+
+### Observações sobre payloads
+
+O back end atualmente espera os seguintes campos:
+
+- **Cadastro** (`POST /api/sellers`): `name`, `cnpj`, `email`, `celular`, `password`
+- **Ativação** (`POST /api/sellers/activate`): `celular`, `codigo`
+- **Login** (`POST /api/auth/login`): `email`, `senha`
 
 ## 📊 Dashboard e Relatórios
 - Implementação de um painel para exibição de relatórios e análise de vendas.

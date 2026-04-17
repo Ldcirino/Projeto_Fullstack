@@ -1,5 +1,6 @@
 import os
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import inspect
 
 db = SQLAlchemy()
 
@@ -29,4 +30,17 @@ def init_db(app):
     # Cria as tabelas automaticamente
     with app.app_context():
         db.create_all()
+
+        # Se a tabela 'users' estiver com schema antigo (sem novas colunas),
+        # recria automaticamente (apenas para desenvolvimento).
+        try:
+            inspector = inspect(db.engine)
+            if "users" in inspector.get_table_names():
+                cols = {c["name"] for c in inspector.get_columns("users")}
+                required = {"id", "name", "cnpj", "email", "celular", "password", "status", "activation_code"}
+                if not required.issubset(cols):
+                    db.drop_all()
+                    db.create_all()
+        except Exception:
+            pass
 
